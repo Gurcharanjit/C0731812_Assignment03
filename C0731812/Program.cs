@@ -7,9 +7,13 @@ using System.Threading.Tasks;
 namespace C0731812
 
 {
-
+    /// <summary>
+    /// Bank Account demo class.
+    /// </summary>
     public class BankAccount
     {
+        public const string DebitAmountExceedsBalanceMessage = "Debit amount exceeds balance";
+        public const string DebitAmountLessThanZeroMessage = "Debit amount is less than Zero";
         private string m_customerName;
 
         private double m_balance;
@@ -19,37 +23,36 @@ namespace C0731812
         private BankAccount()
         {
         }
+
         public BankAccount(string customerName, double balance)
         {
             m_customerName = customerName;
             m_balance = balance;
         }
+
         public string CustomerName
         {
             get { return m_customerName; }
         }
+
         public double Balance
         {
             get { return m_balance; }
         }
+
         public void Debit(double amount)
         {
-            if (m_frozen)
-            {
-                throw new Exception("Account frozen");
-            }
-
             if (amount > m_balance)
             {
-                throw new ArgumentOutOfRangeException("amount");
+                throw new ArgumentOutOfRangeException("amount", amount, DebitAmountExceedsBalanceMessage);
             }
 
             if (amount < 0)
             {
-                throw new ArgumentOutOfRangeException("amount");
+                throw new ArgumentOutOfRangeException("amount", amount, DebitAmountLessThanZeroMessage);
             }
 
-            m_balance += amount; // intentionally incorrect code
+            m_balance -= amount; // intentionally incorrect code
         }
 
         public void Credit(double amount)
@@ -66,14 +69,17 @@ namespace C0731812
 
             m_balance += amount;
         }
+
         private void FreezeAccount()
         {
             m_frozen = true;
         }
+
         private void UnfreezeAccount()
         {
             m_frozen = false;
         }
+
         public static void Main()
         {
             BankAccount ba = new BankAccount("Mr. Bryan Walton", 11.99);
